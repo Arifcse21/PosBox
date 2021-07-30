@@ -1,0 +1,73 @@
+<FlatButton@ButtonBehavior+Label>:
+    font_size : 16
+
+
+
+<SignInWindow>:
+    id : main_win
+    orientation : "vertical"
+    spacing : 10
+    space_x : self.size[0]/3            # size of root and self.size returns a list
+    canvas.before :
+        Color :
+            rgba : (7/255, 175/255, 161/255, 1)
+        Rectangle :
+            size : self.size
+            pos : self.pos
+    BoxLayout :
+        size_hint_y : None
+        height : 50
+        canvas.before :
+            Color :
+                rgba : (0.06, 0.45, 0.45, 1)
+            Rectangle :
+                size : self.size
+                pos : self.pos
+        Label :
+            text : "Access Control"
+            bold : True
+            size_hint_x : .9
+        FlatButton :
+            text : "x"
+            size_hint_x : .1
+    BoxLayout :
+        orientation : "vertical"
+        padding : main_win.space_x, 10      # L-R,  T-B
+        # spacing : 20
+        BoxLayout :
+            orientation : "vertical"
+            spacing : 10
+            size_hint_y : None
+            height : 110
+            Label:
+                id : info
+                text : ""
+                markup : True
+                size_hint_y : None
+                height : 30
+                font_size : '25dp'
+            TextInput :
+                id : usrnm_field
+                hint_text : "Username"
+                multiline : False
+                focus : True
+                on_text_validate : passwd_field.focus = True
+            TextInput :
+                id : passwd_field
+                hint_text : "Password"
+                multiline : False
+                password : True
+                on_text_validate : root.validate_user()
+        Label :
+            id : sp
+            size_hint_y : None
+            height : 40
+        Button :
+            size_hint_y : None
+            height : 80
+            text : "Sign In"
+            background_color : (.06, 0.45, 0.45, 1)
+            # background_normal : ''
+            on_release : root.validate_user()
+        Label :
+            id : sp2
