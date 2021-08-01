@@ -24,8 +24,8 @@ session = Session()
 Base = declarative_base()
 ################################
 def hash_password(password):
-    salt = hashlib.sha512(os.urandom(64)).hexdigest().encode('ascii')
-    password_hash = hashlib.pbkdf2_hmac('sha512',password.encode('utf-8'),
+    salt = hashlib.sha256(os.urandom(64)).hexdigest().encode('ascii')
+    password_hash = hashlib.pbkdf2_hmac('sha256',password.encode('utf-8'),
     salt, 100000)
     password_hash = binascii.hexlify(password_hash)
     return (salt+password_hash).decode('ascii')
@@ -54,7 +54,20 @@ class Stocks(Base):
     sold = Column(Integer, nullable=False)
     last_fillup = Column(DateTime, nullable=False)
 
-Base.metadata.create_all(engine)
+# Base.metadata.create_all(engine)
+
+# user1 = Users(first_name = "Abdullah Al", last_name = "Arif", username = "Arif2743", password = hash_password("arif"), designation = "Administrator")
+#
+# user2 = Users(first_name = "Abdullah", last_name = "Soyaib", username = "Brovai", password = hash_password("brovai"), designation = "Moderator")
+#
+# user3 = Users(first_name = "Safayat", last_name = "Sandid", username = "Nohan", password = hash_password("nohan"), designation = "Editor")
+#
+# user4 = Users(first_name = "Sadika", last_name = "Jahan", username = "saba", password = hash_password("saba"), designation = "Administrator")
+
+
+# session.add_all([user2, user3, user4])
+# session.commit()
+
 
 # class AdminWindow(BoxLayout):
 #     def __init__(self, **kwargs):
