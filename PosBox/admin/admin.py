@@ -2,7 +2,7 @@
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from collections import OrderedDict
-from sqlalchemy import create_engine, Column, Integer, String, DateTime
+from sqlalchemy import create_engine, Column, Integer, String, DateTime, Float
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import  declarative_base
 from datetime import datetime
@@ -15,8 +15,9 @@ import  hashlib, binascii, os
 
 
 mysql_passwd = getpass.getpass("Enter MySQL password: ")         # Cannot be ran on Pycharm. BUt of course in terminal
+db_name = "posbox"
 ################################
-engine = create_engine(f'mysql://root:{mysql_passwd}@localhost:3306/posbox')
+engine = create_engine(f'mysql://root:{mysql_passwd}@localhost:3306/{db_name}')
 Session = sessionmaker(bind=engine)
 session = Session()
 
@@ -38,8 +39,20 @@ class Users(Base):
     username = Column(String(20), unique=True, nullable=False)
     password = Column(String(255), nullable=False)
     designation = Column(String(20), nullable=False)
-    date = Column(DateTime, default=datetime.utcnow)
+    date = Column(DateTime, default=datetime.utcnow, nullable=False)
 
+
+class Stocks(Base):
+    __tablename__ = "stocks"
+    id = Column(Integer, primary_key=True, nullable=False)
+    product_code = Column(String(50), nullable=False)
+    product_name = Column(String(100), nullable=False)
+    product_weight = Column(Float(), nullable=False)
+    product_price = Column(Float(), nullable=False)
+    discount = Column(Float(), nullable=True)
+    in_stock = Column(Integer, nullable=False)
+    sold = Column(Integer, nullable=False)
+    last_fillup = Column(DateTime, nullable=False)
 
 Base.metadata.create_all(engine)
 
@@ -60,13 +73,7 @@ Base.metadata.create_all(engine)
 #
 #
 #     def get_users(self):
-#         # mydb = mysql.connector.connect(
-#         #     host = "localhost",
-#         #     user = 'root',
-#         #     password = mysql_passwd,
-#         #     database = 'poxbox'
-#         # )
-#         # mycursor = mydb.cursor()
+#
 #
 #         _users = OrderedDict()
 #         _users['first_names'] = {}
@@ -74,8 +81,7 @@ Base.metadata.create_all(engine)
 #         _users['user_names'] = {}
 #         _users['password'] = {}
 #         _users['designations'] = {}
-#
-#         sql =
+
 #
 #         first_names = []
 #         last_names = []
