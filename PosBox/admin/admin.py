@@ -11,7 +11,6 @@ import  hashlib, binascii, os
 from utils.datatable import DataTable
 
 
-
 mysql_passwd = getpass.getpass("Enter MySQL password: ")         # Cannot be ran on Pycharm. BUt of course in terminal
 db_name = "posbox"
 ################################
@@ -79,6 +78,11 @@ class AdminWindow(BoxLayout):
         usertable = DataTable(table=users)
         content.add_widget(usertable)
 
+        # Display Products
+        product_scrn = self.ids.scrn_product_content
+        products = self.get_products()
+        prod_table = DataTable(table=products)
+        product_scrn.add_widget(prod_table)
 
     def get_users(self):
         users = session.query(Users)
@@ -105,7 +109,7 @@ class AdminWindow(BoxLayout):
                 pwd = pwd[:10] + '...'
             passwords.append(pwd)
             designations.append(user.designation)
-        print(first_names, last_names, usernames, passwords, designations)
+        # print(first_names, last_names, usernames, passwords, designations)
         user_length = len(first_names)
         index = 0
         while index < user_length:
@@ -119,63 +123,63 @@ class AdminWindow(BoxLayout):
         return _users
 
 
-        # Display Products
-        product_scrn = self.ids.scrn_product_content
-        products = self.get_products()
-        prod_table = DataTable(table=products)
-        product_scrn.add_widget(prod_table)
+    def get_products(self):
+        products = session.query(Stocks)
 
-    # def get_products(self):
-     #
-     #
-     #
-     #
-     #     _stocks = OrderedDict()
-     #     _stocks['product_code'] = {}
-     #     _stocks['product_name'] = {}
-     #     _stocks['product_weight'] = {}
-     #     _stocks['in_stock'] = {}
-     #     _stocks['sold'] = {}
-     #     _stocks['last_purchase'] = {}
-     #
-     #     product_code = []
-     #     product_name = []
-     #     product_weight = []
-     #     in_stock = []
-     #     sold = []
-     #     last_purchase = []
-     #
-     #     for product in products.find():
-     #         product_code.append(product['product_code'])
-     #         pdctname = product['product_name']
-     #         if len(pdctname) > 10:
-     #             pdctname = pdctname[::10] + '...'
-     #         product_name.append(product[pdctname])
-     #         product_weight.append(product['product_weight'])
-     #         in_stock.append(product['in_stock'])
-     #         sold.append(product['sold'])
-     #         last_purchase.append(product['last_purchase'])
-     #
-     #     product_length = len(product_code)
-     #     index = 0
-     #     while index < product_length:
-     #         _stocks['product_code'][index] = product_code[index]
-     #         _stocks['product_name'][index] = product_name[index]
-     #         _stocks['product_weight'][index] = product_weight[index]
-     #         _stocks['in_stock'][index] = in_stock[index]
-     #         _stocks['sold'][index] = sold[index]
-     #         _stocks['last_purchase'][index] = last_purchase[index]
-     #         index += 1
-     #     return _stocks
-     #
-     # def change_screen(self, instance):
-     #     if instance.text == 'Manage Products':
-     #         self.ids.scrn_mngr.current = 'scrn_product_content'
-     #     elif instance.text == "Manage Users":
-     #         self.ids.scrn_mngr.current = 'scrn_content'
-     #     else:
-     #         self.ids.scrn_mngr.current = 'scrn_analysis'
-     #
+        _stocks = OrderedDict()
+        _stocks['product_code'] = {}
+        _stocks['product_name'] = {}
+        _stocks['product_weight'] = {}
+        _stocks['product_price'] = {}
+        _stocks['discount'] = {}
+        _stocks['in_stock'] = {}
+        _stocks['sold'] = {}
+        _stocks['last_fillup'] = {}
+
+        product_code = []
+        product_name = []
+        product_weight = []
+        product_price = []
+        discount = []
+        in_stock = []
+        sold = []
+        last_fillup = []
+
+        for product in products:
+            product_code.append(product.product_code)
+            pdctname = product.product_name
+            if len(pdctname) > 20:
+                pdctname = pdctname[:20] + '...'
+            product_name.append(pdctname)
+            product_weight.append(product.product_weight)
+            product_price.append(product.product_price)
+            discount.append(product.discount)
+            in_stock.append(product.in_stock)
+            sold.append(product.sold)
+            last_fillup.append(product.last_fillup)
+
+        product_length = len(product_code)
+        index = 0
+        while index < product_length:
+            _stocks['product_code'][index] = product_code[index]
+            _stocks['product_name'][index] = product_name[index]
+            _stocks['product_weight'][index] = product_weight[index]
+            _stocks['product_price'][index] = product_price[index]
+            _stocks['discount'][index] = discount[index]
+            _stocks['in_stock'][index] = in_stock[index]
+            _stocks['sold'][index] = sold[index]
+            _stocks['last_fillup'][index] = last_fillup[index]
+            index += 1
+        return _stocks
+
+    def change_screen(self, instance):
+        if instance.text == 'Manage Products':
+            self.ids.scrn_mngr.current = 'scrn_product_content'
+        elif instance.text == "Manage Users":
+            self.ids.scrn_mngr.current = 'scrn_content'
+        else:
+            self.ids.scrn_mngr.current = 'scrn_analysis'
+
 
 class AdminApp(App):
     def build(self):
