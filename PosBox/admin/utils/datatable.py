@@ -5,30 +5,29 @@ import mysql.connector
 from collections import OrderedDict
 
 
-Builder.load_string("""
-    <DataTable>:
-        id : main_win
-        RecycleView:
-            viewclass : 'CustLabel'
-            id : table_floor
-            RecycleGridLayout:
-                id : table_floor_layout
-                cols : 5
-                default_size_hint : (1, None)
-                size_hint_y : None
-                height : self.minimum_height
-                spacing : 5
-                 
-    <CustLabel@Label>:
-    bcolor : (1, 1, 1, 1)
-    canvas.before :
+Builder.load_string('''
+<DataTable>:
+    id: main_win
+    RecycleView:
+        viewclass: 'CustLabel'
+        id: table_floor
+        RecycleGridLayout:
+            id: table_floor_layout
+            cols: 5
+            default_size: (None,250)
+            default_size_hint: (1,None)
+            size_hint_y: None
+            height: self.minimum_height
+            spacing: 5
+<CustLabel@Label>:
+    bcolor: (1,1,1,1)
+    canvas.before:
         Color:
-            rgba : root.bColor
-        Rectangle :
-            size : self.size
-            pos : self.pos
-            
-""")
+            rgba: root.bcolor
+        Rectangle:
+            size: self.size
+            pos: self.pos
+''')
 
 
 
@@ -52,10 +51,10 @@ class DataTable(BoxLayout):
 
 
 
-# class DataTableApp(App):
-#     def build(self):
-#
-#         return DataTable()
-#
+class DataTableApp(App):
+    def build(self):
+
+        return DataTable()
+
 # if __name__ == '__main__':
 #     DataTableApp.run()
