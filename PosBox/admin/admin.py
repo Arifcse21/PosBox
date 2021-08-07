@@ -1,6 +1,8 @@
-
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
+from  kivy.uix.textinput import TextInput
+from kivy.uix.button import Button
+from kivy.uix.spinner import Spinner
 from collections import OrderedDict
 from sqlalchemy import create_engine, Column, Integer, String, DateTime, Float
 from sqlalchemy.orm import sessionmaker
@@ -73,7 +75,7 @@ class AdminWindow(BoxLayout):
         super().__init__(**kwargs)
 
         # Display Users
-        content = self.ids.scrn_content
+        content = self.ids.scrn_contents
         users = self.get_users()
         usertable = DataTable(table=users)
         content.add_widget(usertable)
@@ -121,6 +123,20 @@ class AdminWindow(BoxLayout):
 
             index += 1
         return _users
+
+    def add_user(self):
+        target = self.ids.ops_fields
+        crud_fname = TextInput(hint_text="First Name")
+        crud_lname = TextInput(hint_text="Last Name")
+        crud_uname = TextInput(hint_text="Username")
+        crud_pwd = TextInput(hint_text="Password")
+        crud_des = Spinner(text="Operator", values=["Administrator" , "Moderator" , "Editor"])
+
+        target.add_widget(crud_fname)
+        target.add_widget(crud_lname)
+        target.add_widget(crud_uname)
+        target.add_widget(crud_pwd)
+        target.add_widget(crud_des)
 
 
     def get_products(self):

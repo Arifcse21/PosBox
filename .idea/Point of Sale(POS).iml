@@ -6,6 +6,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="PythonFundamentals" />
+    <orderEntry type="module" module-name="PythonIntermediate" />
+    <orderEntry type="module" module-name="PyDSA" />
   </component>
 </module>

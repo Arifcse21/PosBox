@@ -101,6 +101,30 @@
                 Screen :
                     id : scrn_content
                     name : 'scrn_content'
+                    BoxLayout :
+                        orientation : "vertical"
+                        BoxLayout :
+                            id : scrn_contents
+                        BoxLayout :
+                            id : ops_fields
+                            size_hint_y : None
+                            height : 35
+                        BoxLayout :
+                            id : ops_btns
+                            spacing : 10
+                            size_hint_y : None
+                            height : 45
+                            Button :
+                                id : crud_add
+                                text : "Add User"
+                                on_release : root.add_user()
+                            Button :
+                                id : crud_update
+                                text : "Update User"
+                            Button :
+                                id : crud_remove
+                                text : "Remove User"
+
                 Screen :
                     id : scrn_product_content
                     name : 'scrn_product_content'
