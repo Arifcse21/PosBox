@@ -124,20 +124,39 @@ class AdminWindow(BoxLayout):
             index += 1
         return _users
 
-    def add_user(self):
+    def add_user_fields(self):
         target = self.ids.ops_fields
+        target.clear_widgets()
         crud_fname = TextInput(hint_text="First Name")
         crud_lname = TextInput(hint_text="Last Name")
         crud_uname = TextInput(hint_text="Username")
         crud_pwd = TextInput(hint_text="Password")
         crud_des = Spinner(text="Operator", values=["Administrator" , "Moderator" , "Editor"])
+        crud_submit = Button(text="Add", size_hint_x=None, width=100,
+                             on_release=lambda x:self.add_user(crud_fname.text, crud_lname.text, crud_uname.text, crud_pwd.text, crud_des.text))
 
         target.add_widget(crud_fname)
         target.add_widget(crud_lname)
         target.add_widget(crud_uname)
         target.add_widget(crud_pwd)
         target.add_widget(crud_des)
+        target.add_widget(crud_submit)
 
+    
+    def add_user(self, fname, lname, uname, pwd, des):
+        content = self.ids.scrn_contents
+        content.clear_widgets()
+
+        user = Users(first_name=fname, last_name=lname,
+                     username=uname,
+                     password=hash_password(pwd),
+                     designation=des, date=datetime.now())
+        session.add(user)
+        session.commit()
+
+        users = self.get_users()
+        usertable = DataTable(table=users)
+        content.add_widget(usertable)
 
     def get_products(self):
         products = session.query(Stocks)

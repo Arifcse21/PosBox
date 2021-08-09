@@ -3,8 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/Point of Sale(POS).iml" filepath="$PROJECT_DIR$/.idea/Point of Sale(POS).iml" />
-      <module fileurl="file://$PROJECT_DIR$/../Python/PyDSA/.idea/PyDSA.iml" filepath="$PROJECT_DIR$/../Python/PyDSA/.idea/PyDSA.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../Python/PythonIntermediate/.idea/PythonIntermediate.iml" filepath="$PROJECT_DIR$/../Python/PythonIntermediate/.idea/PythonIntermediate.iml" />
     </modules>
   </component>
 </project>
