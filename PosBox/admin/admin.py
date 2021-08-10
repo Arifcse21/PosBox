@@ -90,11 +90,11 @@ class AdminWindow(BoxLayout):
         users = session.query(Users)
 
         _users = OrderedDict()
-        _users['first_names'] = {}
-        _users['last_names'] = {}
-        _users['usernames'] = {}
-        _users['passwords'] = {}
-        _users['designations'] = {}
+        _users['First Names'] = {}
+        _users['Last Names'] = {}
+        _users['Usernames'] = {}
+        _users['Passwords'] = {}
+        _users['Designations'] = {}
 
         first_names = []
         last_names = []
@@ -115,11 +115,11 @@ class AdminWindow(BoxLayout):
         user_length = len(first_names)
         index = 0
         while index < user_length:
-            _users['first_names'][index] = first_names[index]
-            _users['last_names'][index] = last_names[index]
-            _users['usernames'][index] = usernames[index]
-            _users['passwords'][index] = passwords[index]
-            _users['designations'][index] = designations[index]
+            _users['First Names'][index] = first_names[index]
+            _users['Last Names'][index] = last_names[index]
+            _users['Usernames'][index] = usernames[index]
+            _users['Passwords'][index] = passwords[index]
+            _users['Designations'][index] = designations[index]
 
             index += 1
         return _users
@@ -131,7 +131,7 @@ class AdminWindow(BoxLayout):
         crud_lname = TextInput(hint_text="Last Name")
         crud_uname = TextInput(hint_text="Username")
         crud_pwd = TextInput(hint_text="Password")
-        crud_des = Spinner(text="Operator", values=["Administrator" , "Moderator" , "Editor"])
+        crud_des = Spinner(text="Operator", values=["Operator", "Administrator" ])
         crud_submit = Button(text="Add", size_hint_x=None, width=100,
                              on_release=lambda x:self.add_user(crud_fname.text, crud_lname.text, crud_uname.text, crud_pwd.text, crud_des.text))
 
@@ -157,6 +157,52 @@ class AdminWindow(BoxLayout):
         users = self.get_users()
         usertable = DataTable(table=users)
         content.add_widget(usertable)
+
+
+    def update_user_fields(self):
+        info = self.ids.info
+        info.text = "[color=#0000FF]N.B: All fields should be filled![/color]"
+        target = self.ids.ops_fields
+        target.clear_widgets()
+        crud_fname = TextInput(hint_text="First Name")
+        crud_lname = TextInput(hint_text="Last Name")
+        crud_uname = TextInput(hint_text="Username")
+        crud_pwd = TextInput(hint_text="Password")
+        crud_des = Spinner(text="Operator", values=["Operator", "Administrator" ])
+        crud_submit = Button(text="Update", size_hint_x=None, width=100,
+                             on_release=lambda x:self.update_user(crud_fname.text, crud_lname.text, crud_uname.text, crud_pwd.text, crud_des.text))
+
+        target.add_widget(crud_uname)
+        target.add_widget(crud_fname)
+        target.add_widget(crud_lname)
+        target.add_widget(crud_pwd)
+        target.add_widget(crud_des)
+
+        target.add_widget(crud_submit)
+
+
+    def update_user(self, fname, lname, uname, pwd, des):
+        content = self.ids.scrn_contents
+        content.clear_widgets()
+
+        user = session.query(Users).filter(Users.username == uname).first()
+        user.first_name = fname
+        user.last_name = lname
+        user.password = hash_password(pwd)
+        user.designation = des
+
+
+
+        session.commit()
+
+        users = self.get_users()
+        usertable = DataTable(table=users)
+        content.clear_widgets()
+        content.add_widget(usertable)
+
+
+
+
 
     def get_products(self):
         products = session.query(Stocks)

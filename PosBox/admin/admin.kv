@@ -105,6 +105,15 @@
                         orientation : "vertical"
                         BoxLayout :
                             id : scrn_contents
+
+                        BoxLayout :
+                            Label:
+                                id : info
+                                text : ""
+                                markup : True
+                                size_hint_y : None
+                                height : 30
+                                font_size : '20dp'
                         BoxLayout :
                             id : ops_fields
                             size_hint_y : None
@@ -121,6 +130,7 @@
                             Button :
                                 id : crud_update
                                 text : "Update User"
+                                on_release : root.update_user_fields()
                             Button :
                                 id : crud_remove
                                 text : "Remove User"
