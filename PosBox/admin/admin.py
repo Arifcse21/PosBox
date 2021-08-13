@@ -201,8 +201,26 @@ class AdminWindow(BoxLayout):
         content.add_widget(usertable)
 
 
+    def remove_user_fields(self):
+        target = self.ids.ops_fields
+        target.clear_widgets()
+        crud_user = TextInput(hint_text="Username")
+        crud_submit = Button(text="Remove", size_hint_x=None, width=100,
+                             on_release=lambda x: self.remove_user(crud_user.text))
+        target.add_widget(crud_user)
+        target.add_widget(crud_submit)
 
+    def remove_user(self, username):
+        content = self.ids.scrn_contents
+        content.clear_widgets()
+        user = session.query(Users).filter(Users.username == username).first()
+        session.delete(user)
+        session.commit()
 
+        users = self.get_users()
+        usertable = DataTable(table=users)
+        content.clear_widgets()
+        content.add_widget(usertable)
 
     def get_products(self):
         products = session.query(Stocks)
