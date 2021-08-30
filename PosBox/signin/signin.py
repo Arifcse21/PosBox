@@ -1,5 +1,9 @@
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
+from kivy.config import Config
+
+# Config.set('graphics', 'fullscreen', '0')
+# Config.write()
 
 
 class SignInWindow(BoxLayout):

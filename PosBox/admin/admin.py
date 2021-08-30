@@ -1,5 +1,6 @@
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.label import Label
 from  kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
 from kivy.uix.spinner import Spinner
@@ -50,7 +51,7 @@ class Stocks(Base):
     product_price = Column(Float(), nullable=False)
     discount = Column(Float(), nullable=True)
     in_stock = Column(Integer, nullable=False)
-    sold = Column(Integer, nullable=False)
+    sold = Column(Integer, nullable=True)
     last_fillup = Column(DateTime, nullable=False)
 
 
@@ -81,7 +82,7 @@ class AdminWindow(BoxLayout):
         content.add_widget(usertable)
 
         # Display Products
-        product_scrn = self.ids.scrn_product_content
+        product_scrn = self.ids.scrn_product_contents
         products = self.get_products()
         prod_table = DataTable(table=products)
         product_scrn.add_widget(prod_table)
@@ -127,10 +128,10 @@ class AdminWindow(BoxLayout):
     def add_user_fields(self):
         target = self.ids.ops_fields
         target.clear_widgets()
-        crud_fname = TextInput(hint_text="First Name")
-        crud_lname = TextInput(hint_text="Last Name")
-        crud_uname = TextInput(hint_text="Username")
-        crud_pwd = TextInput(hint_text="Password")
+        crud_fname = TextInput(hint_text="First Name", multiline = False)
+        crud_lname = TextInput(hint_text="Last Name", multiline = False)
+        crud_uname = TextInput(hint_text="Username", multiline = False)
+        crud_pwd = TextInput(hint_text="Password", multiline = False)
         crud_des = Spinner(text="Operator", values=["Operator", "Administrator" ])
         crud_submit = Button(text="Add", size_hint_x=None, width=100,
                              on_release=lambda x:self.add_user(crud_fname.text, crud_lname.text, crud_uname.text, crud_pwd.text, crud_des.text))
@@ -164,10 +165,10 @@ class AdminWindow(BoxLayout):
         info.text = "[color=#0000FF]N.B: All fields should be filled![/color]"
         target = self.ids.ops_fields
         target.clear_widgets()
-        crud_fname = TextInput(hint_text="First Name")
-        crud_lname = TextInput(hint_text="Last Name")
-        crud_uname = TextInput(hint_text="Username")
-        crud_pwd = TextInput(hint_text="Password")
+        crud_fname = TextInput(hint_text="First Name", multiline = False)
+        crud_lname = TextInput(hint_text="Last Name", multiline = False)
+        crud_uname = TextInput(hint_text="Username", multiline = False)
+        crud_pwd = TextInput(hint_text="Password", multiline = False)
         crud_des = Spinner(text="Operator", values=["Operator", "Administrator" ])
         crud_submit = Button(text="Update", size_hint_x=None, width=100,
                              on_release=lambda x:self.update_user(crud_fname.text, crud_lname.text, crud_uname.text, crud_pwd.text, crud_des.text))
@@ -204,7 +205,7 @@ class AdminWindow(BoxLayout):
     def remove_user_fields(self):
         target = self.ids.ops_fields
         target.clear_widgets()
-        crud_user = TextInput(hint_text="Username")
+        crud_user = TextInput(hint_text="Username", multiline = False)
         crud_submit = Button(text="Remove", size_hint_x=None, width=100,
                              on_release=lambda x: self.remove_user(crud_user.text))
         target.add_widget(crud_user)
@@ -226,14 +227,14 @@ class AdminWindow(BoxLayout):
         products = session.query(Stocks)
 
         _stocks = OrderedDict()
-        _stocks['product_code'] = {}
-        _stocks['product_name'] = {}
-        _stocks['product_weight'] = {}
-        _stocks['product_price'] = {}
-        _stocks['discount'] = {}
-        _stocks['in_stock'] = {}
-        _stocks['sold'] = {}
-        _stocks['last_fillup'] = {}
+        _stocks['Product code'] = {}
+        _stocks['Product name'] = {}
+        _stocks['Product weight'] = {}
+        _stocks['Product price'] = {}
+        _stocks['Discount'] = {}
+        _stocks['In stock'] = {}
+        _stocks['Sold'] = {}
+        _stocks['Last fillup'] = {}
 
         product_code = []
         product_name = []
@@ -254,22 +255,71 @@ class AdminWindow(BoxLayout):
             product_price.append(product.product_price)
             discount.append(product.discount)
             in_stock.append(product.in_stock)
-            sold.append(product.sold)
-            last_fillup.append(product.last_fillup)
+            try:
+                sold.append(product.sold)
+            except KeyError:
+                sold.append("")
+            try:
+                last_fillup.append(product.last_fillup)
+            except KeyError:
+                last_fillup.append("")
 
         product_length = len(product_code)
         index = 0
         while index < product_length:
-            _stocks['product_code'][index] = product_code[index]
-            _stocks['product_name'][index] = product_name[index]
-            _stocks['product_weight'][index] = product_weight[index]
-            _stocks['product_price'][index] = product_price[index]
-            _stocks['discount'][index] = discount[index]
-            _stocks['in_stock'][index] = in_stock[index]
-            _stocks['sold'][index] = sold[index]
-            _stocks['last_fillup'][index] = last_fillup[index]
+            _stocks['Product code'][index] = product_code[index]
+            _stocks['Product name'][index] = product_name[index]
+            _stocks['Product weight'][index] = product_weight[index]
+            _stocks['Product price'][index] = product_price[index]
+            _stocks['Discount'][index] = discount[index]
+            _stocks['In stock'][index] = in_stock[index]
+            _stocks['Sold'][index] = sold[index]
+            _stocks['Last fillup'][index] = last_fillup[index]
             index += 1
         return _stocks
+
+    def add_product_fields(self):
+        target = self.ids.ops_fields_p
+        target.clear_widgets()
+
+
+        crud_code = TextInput(hint_text="Product Code", multiline = False)
+        crud_name = TextInput(hint_text="Product Name", multiline = False)
+        crud_weight = TextInput(hint_text="Weight", multiline = False)
+        crud_price = TextInput(hint_text="Price", multiline = False)
+        crud_discount = TextInput(hint_text="Discount", multiline = False)
+        crud_number = TextInput(hint_text="Number of items", multiline = False)
+        crud_submit = Button(text="Add Product", size_hint_x=None, width=100, on_release = lambda x:
+                             self.add_product(crud_code.text, crud_name.text, crud_weight.text, crud_price.text, crud_discount.text,
+                                crud_number.text ))
+
+
+        target.add_widget(crud_code)
+        target.add_widget(crud_name)
+        target.add_widget(crud_weight)
+        target.add_widget(crud_price)
+        target.add_widget(crud_discount)
+        target.add_widget(crud_number)
+        target.add_widget(crud_submit)
+
+    def add_product(self,code, name, weight, price, discnt, items):
+        content = self.ids.scrn_product_contents
+        content.clear_widgets()
+
+        # instock = session.query(Stocks).filter(Stocks.product_code == code ).first()
+        # print(instock.in_stock)
+
+        product = Stocks(product_code = code, product_name=name,
+                         product_weight=weight, product_price=price,
+                         discount=discnt,
+                         in_stock = items,
+                         last_fillup = datetime.now())
+        session.add(product)
+        session.commit()
+
+        products = self.get_products()
+        producttable = DataTable(table=products)
+        content.add_widget(producttable)
 
     def change_screen(self, instance):
         if instance.text == 'Manage Products':
