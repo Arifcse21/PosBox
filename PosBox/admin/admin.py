@@ -1,3 +1,4 @@
+#import Product as Product
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
@@ -317,9 +318,47 @@ class AdminWindow(BoxLayout):
         session.add(product)
         session.commit()
 
+    def update_product_fields(self):
+        target  = self.ids.ops_fields_p
+        target.clear_widgets()
+
+        crud_code = TextInput(hint_text='Product Code', multiline=False)
+        crud_name = TextInput(hint_text='Product Name', multiline=False)
+        crud_weight = TextInput(hint_text="Weight", multiline=False)
+        crud_price = TextInput(hint_text="Price", multiline=False)
+        crud_discount = TextInput(hint_text="Discount", multiline=False)
+        crud_number = TextInput(hint_text="Number of items", multiline=False)
+        crud_submit = Button(text="Update Product", size_hint_x=None, width=100, on_release=lambda x:
+        self.update_product(crud_code.text, crud_name.text, crud_weight.text, crud_price.text, crud_discount.text,
+                         crud_number.text))
+
+        target.add_widget(crud_code)
+        target.add_widget(crud_name)
+        target.add_widget(crud_weight)
+        target.add_widget(crud_price)
+        target.add_widget(crud_discount)
+        target.add_widget(crud_number)
+        target.add_widget(crud_submit)
+
+
+    def update_product(self,code, name, weight, price, discnt, items):
+        content = self.ids.scrn_product_contents
+        content.clear_widgets()
+
+        product = session.query(Stocks).filter(Stocks.product_code == code).first()
+        product.product_name = name
+        product.product_weight = weight
+        product.product_price = price
+        product.discount = discnt
+        product.in_stock = items
+        product.last_fillup = datetime.now()
+
+        session.commit()
+
+
         products = self.get_products()
-        producttable = DataTable(table=products)
-        content.add_widget(producttable)
+        stocktable = DataTable(table=products)
+        content.add_widget(stocktable)
 
     def change_screen(self, instance):
         if instance.text == 'Manage Products':
@@ -332,7 +371,7 @@ class AdminWindow(BoxLayout):
 
 class AdminApp(App):
     def build(self):
-        self.icon = "/mnt/Downloads/Pictures/arch.png"
+        self.icon = "/mnt/Documents/Point of Sale(POS)/PosBox/posbox.png"
         return AdminWindow()
 
 
