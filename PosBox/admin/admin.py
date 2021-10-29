@@ -1,17 +1,17 @@
-#import Product as Product
+# import Product as Product
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.label import Label
-from  kivy.uix.textinput import TextInput
+# from kivy.uix.label import Label
+from kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
 from kivy.uix.spinner import Spinner
 from collections import OrderedDict
 from sqlalchemy import create_engine, Column, Integer, String, DateTime, Float
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import  declarative_base
+from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
 import getpass
-import  hashlib, binascii, os
+import hashlib, binascii, os
 from utils.datatable import DataTable
 
 
@@ -355,10 +355,33 @@ class AdminWindow(BoxLayout):
 
         session.commit()
 
+        products = self.get_products()
+        stocktable = DataTable(table=products)
+        content.add_widget(stocktable)
+
+    def remove_product_fields(self):
+        target = self.ids.ops_fields_p
+        target.clear_widgets()
+
+        crud_code = TextInput(hint_text="Product Code")
+        crud_submit = Button(text="Remove", size_hint_x=None, width=100, on_release=lambda x: self.remove_product(crud_code.text))
+
+        target.add_widget(crud_code)
+        target.add_widget(crud_submit)
+
+    def remove_product(self, code):
+        content = self.ids.scrn_product_contents
+        content.clear_widgets()
+
+        product = session.query(Stocks).filter(Stocks.product_code == code).first()
+        session.delete(product)
+        session.commit()
 
         products = self.get_products()
         stocktable = DataTable(table=products)
         content.add_widget(stocktable)
+
+
 
     def change_screen(self, instance):
         if instance.text == 'Manage Products':
