@@ -76,6 +76,25 @@ class AdminWindow(BoxLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
+
+        products = session.query(Stocks)
+        product_code = []
+        product_name = []
+        spinvals = []
+        for product in products:
+            product_code.append(product.product_code)
+            pdctname = product.product_name
+            if len(pdctname) > 30:
+                pdctname = pdctname[:30] + '...'
+            product_name.append(pdctname)
+        for x in range(len(product_code)):
+            line = " | ".join([product_code[x], product_name[x]])
+            spinvals.append(line)
+        self.ids.target_product.values = spinvals
+
+
+
+
         # Display Users
         content = self.ids.scrn_contents
         users = self.get_users()
